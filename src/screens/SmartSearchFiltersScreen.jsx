@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const categoryOptions = [
   { id: 'all-cats', label: 'All Categories',    icon: 'grid_view' },
@@ -24,13 +24,20 @@ const locationOptions = ['All Locations', 'Singapore', 'Malaysia', 'Indonesia', 
 
 export default function SmartSearchFiltersScreen() {
   const navigate = useNavigate();
-  const [selectedCats, setSelectedCats] = useState(['appliances']);
-  const [priceRange, setPriceRange] = useState('any');
-  const [minRating, setMinRating] = useState(null);
-  const [location, setLocation] = useState('All Locations');
-  const [mallOnly, setMallOnly] = useState(false);
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [freeShip, setFreeShip] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  // DEF-008: initialise from existing URL params so state survives round-trips
+  const [selectedCats, setSelectedCats] = useState(
+    searchParams.get('cats') ? searchParams.get('cats').split(',') : ['appliances']
+  );
+  const [priceRange, setPriceRange] = useState(searchParams.get('priceRange') || 'any');
+  const [minRating, setMinRating] = useState(
+    searchParams.get('rating') ? Number(searchParams.get('rating')) : null
+  );
+  const [location, setLocation] = useState(searchParams.get('location') || 'All Locations');
+  const [mallOnly, setMallOnly] = useState(searchParams.get('mall') === '1');
+  const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get('verified') === '1');
+  const [freeShip, setFreeShip] = useState(searchParams.get('freeShip') === '1');
 
   const toggleCat = (id) => {
     if (id === 'all-cats') { setSelectedCats([]); return; }
@@ -66,6 +73,11 @@ export default function SmartSearchFiltersScreen() {
             setMallOnly(false);
             setVerifiedOnly(false);
             setFreeShip(false);
+            // Also clear filter params from URL while preserving q/category
+            const params = new URLSearchParams();
+            if (searchParams.get('q')) params.set('q', searchParams.get('q'));
+            if (searchParams.get('category')) params.set('category', searchParams.get('category'));
+            navigate(`/search/filters?${params.toString()}`, { replace: true });
           }}
           className="text-primary text-label-sm font-semibold"
         >
@@ -205,7 +217,22 @@ export default function SmartSearchFiltersScreen() {
       {/* Fixed Apply Bar */}
       <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-50 pb-safe px-4 py-3">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            // DEF-008: encode all filter state into URL params and navigate to search
+            const params = new URLSearchParams(searchParams);
+            if (selectedCats.length > 0) params.set('cats', selectedCats.join(','));
+            else params.delete('cats');
+            if (priceRange !== 'any') params.set('priceRange', priceRange);
+            else params.delete('priceRange');
+            if (minRating) params.set('rating', String(minRating));
+            else params.delete('rating');
+            if (location !== 'All Locations') params.set('location', location);
+            else params.delete('location');
+            if (mallOnly) params.set('mall', '1'); else params.delete('mall');
+            if (verifiedOnly) params.set('verified', '1'); else params.delete('verified');
+            if (freeShip) params.set('freeShip', '1'); else params.delete('freeShip');
+            navigate(`/search?${params.toString()}`);
+          }}
           className="w-full bg-primary text-on-primary py-3 rounded-full text-label-sm font-bold active:opacity-80"
         >
           Apply Filters{activeCount > 0 ? ` (${activeCount})` : ''}

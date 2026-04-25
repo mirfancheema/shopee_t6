@@ -1,22 +1,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
-import { cartItems } from '../data/mockData';
+import { useCart } from '../context/CartContext';
 
 const paymentMethods = [
   { id: 'shopeepay', label: 'ShopeePay', icon: 'account_balance_wallet', desc: 'Balance: $150.00' },
-  { id: 'cod', label: 'Cash on Delivery', icon: 'payments', desc: '' },
-  { id: 'card', label: 'Credit / Debit Card', icon: 'credit_card', desc: 'Visa, Mastercard' },
+  { id: 'cod',       label: 'Cash on Delivery', icon: 'payments', desc: '' },
+  { id: 'card',      label: 'Credit / Debit Card', icon: 'credit_card', desc: 'Visa, Mastercard' },
 ];
 
 export default function CheckoutScreen() {
   const navigate = useNavigate();
+  const { selectedItems, subtotal } = useCart();
   const [payMethod, setPayMethod] = useState('shopeepay');
 
-  const subtotal = cartItems.reduce((s, c) => s + c.price * c.qty, 0);
   const shipping = 5.99;
   const discount = 10.00;
   const total = subtotal + shipping - discount;
+
+  // Fall back to all items if nothing is selected (user navigated directly)
+  const { items: allItems } = useCart();
+  const orderItems = selectedItems.length > 0 ? selectedItems : allItems;
 
   return (
     <>
@@ -25,7 +29,6 @@ export default function CheckoutScreen() {
       <main className="pt-14 pb-36 min-h-screen bg-[#F5F5F5]">
         {/* Delivery Address */}
         <section className="bg-white mb-2">
-          {/* Decorative stripe */}
           <div
             className="h-1.5 w-full"
             style={{ background: 'repeating-linear-gradient(90deg, #b22204 0px, #b22204 10px, #ffdad3 10px, #ffdad3 20px)' }}
@@ -45,10 +48,10 @@ export default function CheckoutScreen() {
           </div>
         </section>
 
-        {/* Order Items */}
+        {/* Order Items — DEF-002: uses selectedItems from CartContext with live qty */}
         <section className="bg-white mb-2 px-4 py-3">
           <h3 className="text-h3 text-on-surface font-semibold mb-3">Order Summary</h3>
-          {cartItems.map((item) => (
+          {orderItems.map((item) => (
             <div key={item.id} className="flex gap-3 mb-3 last:mb-0">
               <img
                 src={item.image}
@@ -138,7 +141,7 @@ export default function CheckoutScreen() {
         </section>
       </main>
 
-      {/* Fixed Bottom Bar */}
+      {/* Fixed Bottom Bar — DEF-001: navigates to /order-confirmed instead of alert() */}
       <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-50 pb-safe px-4 py-3">
         <div className="flex items-center justify-between">
           <div>
@@ -146,7 +149,7 @@ export default function CheckoutScreen() {
             <p className="text-price-lg text-primary font-bold">${total.toFixed(2)}</p>
           </div>
           <button
-            onClick={() => alert('Order placed successfully! 🎉')}
+            onClick={() => navigate('/order-confirmed')}
             className="bg-primary text-on-primary px-8 py-3 rounded-full text-label-sm font-bold active:opacity-80"
           >
             Place Order

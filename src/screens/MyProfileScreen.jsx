@@ -2,21 +2,22 @@ import { Link } from 'react-router-dom';
 import BottomNav from '../components/layout/BottomNav';
 import { userProfile } from '../data/mockData';
 
+// DEF-005: replace all '#' stubs with real or nearest-available routes
 const orderSteps = [
-  { icon: 'payments', label: 'To Pay', count: userProfile.toPay, to: '/checkout' },
-  { icon: 'local_shipping', label: 'To Ship', count: userProfile.toShip, to: '#' },
-  { icon: 'inventory_2', label: 'To Receive', count: userProfile.toReceive, to: '#' },
-  { icon: 'rate_review', label: 'To Review', count: userProfile.toReview, to: '#' },
+  { icon: 'payments',       label: 'To Pay',     count: userProfile.toPay,     to: '/checkout' },
+  { icon: 'local_shipping', label: 'To Ship',    count: userProfile.toShip,    to: '/notifications' },
+  { icon: 'inventory_2',    label: 'To Receive', count: userProfile.toReceive, to: '/notifications' },
+  { icon: 'rate_review',    label: 'To Review',  count: userProfile.toReview,  to: '/notifications' },
 ];
 
 const menuItems = [
-  { icon: 'workspace_premium', label: 'Shopee Rewards', desc: 'View your rewards & tier benefits', to: '#' },
-  { icon: 'storefront', label: 'My Shop', desc: 'Manage your listings', to: '#' },
-  { icon: 'account_balance_wallet', label: 'ShopeePay', desc: userProfile.shopeePay + ' available', to: '#' },
-  { icon: 'monetization_on', label: 'Shopee Coins', desc: `${userProfile.coins.toLocaleString()} coins`, to: '#' },
-  { icon: 'local_activity', label: 'Vouchers', desc: `${userProfile.voucherCount} vouchers available`, to: '#' },
-  { icon: 'help', label: 'Help Centre', desc: 'Get support', to: '#' },
-  { icon: 'settings', label: 'Settings', desc: '', to: '#' },
+  { icon: 'workspace_premium',    label: 'Shopee Rewards', desc: 'View your rewards & tier benefits', to: '/deals' },
+  { icon: 'storefront',           label: 'My Shop',         desc: 'Manage your listings',              to: '/notifications' },
+  { icon: 'account_balance_wallet', label: 'ShopeePay',    desc: userProfile.shopeePay + ' available', to: '/notifications' },
+  { icon: 'monetization_on',      label: 'Shopee Coins',   desc: `${userProfile.coins.toLocaleString()} coins`, to: '/deals' },
+  { icon: 'local_activity',       label: 'Vouchers',       desc: `${userProfile.voucherCount} vouchers available`, to: '/deals' },
+  { icon: 'help',                 label: 'Help Centre',    desc: 'Get support',                       to: '/notifications' },
+  { icon: 'settings',             label: 'Settings',       desc: '',                                  to: '/notifications' },
 ];
 
 export default function MyProfileScreen() {
@@ -74,7 +75,7 @@ export default function MyProfileScreen() {
             { icon: 'credit_card', label: 'PayLater', value: userProfile.shopeePayLater, color: 'text-on-surface' },
             { icon: 'monetization_on', label: 'Coins', value: userProfile.coins.toLocaleString(), color: 'text-secondary' },
           ].map((item) => (
-            <button key={item.label} className="flex flex-col items-center gap-1 active:opacity-70">
+            <button key={item.label} aria-label={`${item.label}: ${item.value}`} className="flex flex-col items-center gap-1 active:opacity-70">
               <span className={`material-symbols-outlined ${item.color} text-[22px]`}>{item.icon}</span>
               <span className={`text-h3 font-bold ${item.color}`}>{item.value}</span>
               <span className="text-caption text-on-surface-variant">{item.label}</span>
@@ -86,7 +87,7 @@ export default function MyProfileScreen() {
         <section className="bg-white mb-2 px-3 py-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-h3 text-on-surface font-bold">My Orders</h2>
-            <Link to="#" className="text-primary text-label-sm flex items-center">
+            <Link to="/notifications" className="text-primary text-label-sm flex items-center">
               See all <span className="material-symbols-outlined text-[16px]">chevron_right</span>
             </Link>
           </div>

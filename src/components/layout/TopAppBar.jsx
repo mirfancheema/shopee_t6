@@ -1,7 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
 
 export default function TopAppBar({ variant = 'home', title = '' }) {
   const navigate = useNavigate();
+  const { cartCount } = useCart();
 
   if (variant === 'back') {
     return (
@@ -42,7 +44,11 @@ export default function TopAppBar({ variant = 'home', title = '' }) {
       </Link>
       <Link to="/cart" className="p-2 text-zinc-500 rounded-full hover:bg-zinc-50 active:opacity-70 flex-shrink-0 relative" aria-label="Cart">
         <span className="material-symbols-outlined text-[22px]">shopping_cart</span>
-        <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center">3</span>
+        {cartCount > 0 && (
+          <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+            {cartCount > 9 ? '9+' : cartCount}
+          </span>
+        )}
       </Link>
     </header>
   );

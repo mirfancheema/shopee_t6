@@ -9,6 +9,7 @@ export default function ProductDetailsScreen() {
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [liked, setLiked] = useState(false);
+  const [following, setFollowing] = useState(false); // DEF-015
 
   if (!product) {
     return (
@@ -123,7 +124,7 @@ export default function ProductDetailsScreen() {
             <div className="w-px h-4 bg-surface-variant" />
             <span className="text-body-md text-on-surface-variant">{product.sold} sold</span>
             <div className="w-px h-4 bg-surface-variant" />
-            <button className="flex items-center gap-1 text-on-surface-variant">
+            <button className="flex items-center gap-1 text-on-surface-variant" aria-label="Share product">
               <span className="material-symbols-outlined text-[18px]">share</span>
               <span className="text-caption">Share</span>
             </button>
@@ -165,8 +166,16 @@ export default function ProductDetailsScreen() {
                 <span className="text-caption text-tertiary">Official Store</span>
               </div>
             </div>
-            <button className="border border-primary text-primary text-label-sm px-3 py-1.5 rounded-full active:opacity-70">
-              Follow
+            <button
+              onClick={() => setFollowing(f => !f)}
+              className={`text-label-sm px-3 py-1.5 rounded-full active:opacity-70 transition-colors ${
+                following
+                  ? 'bg-surface-container text-on-surface-variant border border-surface-variant'
+                  : 'border border-primary text-primary'
+              }`}
+              aria-label={following ? 'Unfollow seller' : 'Follow seller'}
+            >
+              {following ? 'Following' : 'Follow'}
             </button>
           </div>
         </section>

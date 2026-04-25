@@ -1,7 +1,30 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
 import BottomNav from '../components/layout/BottomNav';
 import { deals, recentOrders, products, img } from '../data/mockData';
+
+// DEF-018: live countdown hook
+function useCountdown(targetHour) {
+  const [display, setDisplay] = useState('--:--:--');
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const end = new Date();
+      end.setHours(targetHour, 0, 0, 0);
+      if (end <= now) end.setDate(end.getDate() + 1);
+      const diff = end - now;
+      const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+      setDisplay(`${h}:${m}:${s}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [targetHour]);
+  return display;
+}
 
 const loyaltyTier = { name: 'Silver', coins: 2500, nextTier: 'Gold', progress: 62 };
 const vouchers = [
@@ -12,6 +35,8 @@ const weeklyDeals = products.filter(p => p.discountPct).slice(0, 6);
 const flashProducts = products.slice(3, 7);
 
 export default function DealsLoyaltyHubScreen() {
+  const flashCountdown = useCountdown(21); // counts down to 9pm
+
   return (
     <>
       <TopAppBar variant="home" />
@@ -130,9 +155,7 @@ export default function DealsLoyaltyHubScreen() {
               <span className="material-symbols-outlined text-primary text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
               <h2 className="text-h3 text-on-surface font-bold">Flash Deals</h2>
               <div className="flex items-center gap-0.5 bg-on-surface rounded px-1.5 py-0.5">
-                {['01', '23', '45'].map((t, i) => (
-                  <span key={i} className="text-white text-[11px] font-bold font-mono">{t}{i < 2 ? ':' : ''}</span>
-                ))}
+                <span className="text-white text-[11px] font-bold font-mono">{flashCountdown}</span>
               </div>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
 import BottomNav from '../components/layout/BottomNav';
@@ -13,7 +14,40 @@ const carouselSlides = [
 const flashSaleProducts = products.filter(p => p.discountPct).slice(0, 6);
 const forYouProducts = products.slice(0, 8);
 
+// DEF-017: live countdown to next sale end hour
+function useCountdown(targetHour) {
+  const [display, setDisplay] = useState('--:--:--');
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const end = new Date();
+      end.setHours(targetHour, 0, 0, 0);
+      if (end <= now) end.setDate(end.getDate() + 1);
+      const diff = end - now;
+      const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+      setDisplay(`${h}:${m}:${s}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [targetHour]);
+  return display;
+}
+
 export default function HomeScreen() {
+  // DEF-012: track active carousel slide via scroll position
+  const [activeSlide, setActiveSlide] = useState(0);
+  const carouselRef = useRef(null);
+  const flashCountdown = useCountdown(23); // counts down to 11pm
+
+  const onCarouselScroll = () => {
+    if (!carouselRef.current) return;
+    const { scrollLeft, offsetWidth } = carouselRef.current;
+    setActiveSlide(Math.round(scrollLeft / offsetWidth));
+  };
+
   return (
     <>
       <TopAppBar variant="home" />
@@ -21,16 +55,26 @@ export default function HomeScreen() {
       <main className="pt-14 pb-20 bg-[#F5F5F5] min-h-screen">
         {/* Carousel */}
         <section className="bg-white mb-2">
-          <div className="relative overflow-x-auto no-scrollbar flex snap-x snap-mandatory">
-            {carouselSlides.map((slide, i) => (
+          <div
+            ref={carouselRef}
+            onScroll={onCarouselScroll}
+            className="relative overflow-x-auto no-scrollbar flex snap-x snap-mandatory"
+          >
+            {carouselSlides.map((slide) => (
               <div key={slide.id} className="w-full flex-shrink-0 snap-start aspect-[21/9] relative">
                 <img src={slide.src} alt={slide.alt} className="w-full h-full object-cover" />
               </div>
             ))}
           </div>
+          {/* DEF-012: active dot derived from activeSlide state */}
           <div className="flex justify-center gap-1.5 py-2">
             {carouselSlides.map((_, i) => (
-              <div key={i} className={`rounded-full ${i === 0 ? 'w-4 h-1.5 bg-primary' : 'w-1.5 h-1.5 bg-zinc-300'}`} />
+              <div
+                key={i}
+                className={`rounded-full transition-all ${
+                  i === activeSlide ? 'w-4 h-1.5 bg-primary' : 'w-1.5 h-1.5 bg-zinc-300'
+                }`}
+              />
             ))}
           </div>
         </section>
@@ -60,22 +104,20 @@ export default function HomeScreen() {
               <p className="text-h3 text-on-primary-fixed font-bold">Collect Vouchers</p>
               <p className="text-caption text-on-primary-fixed-variant">Up to $50 off your next purchase</p>
             </div>
-            <button className="bg-primary text-on-primary text-label-sm font-semibold px-3 py-1.5 rounded-full active:opacity-80">
+            <button className="bg-primary text-on-primary text-label-sm font-semibold px-3 py-1.5 rounded-full active:opacity-80" aria-label="Collect vouchers">
               Collect
             </button>
           </div>
         </section>
 
-        {/* Flash Sale */}
+        {/* Flash Sale — DEF-017: live countdown */}
         <section className="bg-white mb-2 py-3">
           <div className="flex items-center justify-between px-3 mb-3">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>sell</span>
               <h2 className="text-h3 text-on-surface font-bold">Flash Sale</h2>
-              <div className="flex items-center gap-0.5 bg-on-surface rounded px-1.5 py-0.5">
-                {['02', '34', '56'].map((t, i) => (
-                  <span key={i} className="text-white text-[11px] font-bold font-mono">{t}{i < 2 ? ':' : ''}</span>
-                ))}
+              <div className="flex items-center bg-on-surface rounded px-1.5 py-0.5">
+                <span className="text-white text-[11px] font-bold font-mono">{flashCountdown}</span>
               </div>
             </div>
             <Link to="/search?type=flash-sale" className="text-primary text-label-sm flex items-center">
@@ -115,7 +157,7 @@ export default function HomeScreen() {
           </div>
         </section>
 
-        {/* For You — Product Grid */}
+        {/* For You */}
         <section className="bg-white py-3">
           <div className="flex items-center justify-between px-3 mb-3">
             <h2 className="text-h3 text-on-surface font-bold">For You</h2>
