@@ -42,6 +42,30 @@ const banners = [
     ctaText: 'text-tertiary',
     to: '/search?category=cat-beauty',
   },
+  {
+    id: 4,
+    gradient: 'from-[#1a1c1c] to-[#2f3131]',
+    icon: 'sports_esports',
+    eyebrow: 'GAMING WEEK',
+    headline: 'Level Up Your Setup',
+    sub: 'Controllers, headsets & more',
+    cta: 'Shop Gaming',
+    ctaBg: 'bg-primary',
+    ctaText: 'text-on-primary',
+    to: '/search?category=cat-gaming',
+  },
+  {
+    id: 5,
+    gradient: 'from-[#00416a] to-[#005580]',
+    icon: 'health_and_safety',
+    eyebrow: 'WELLNESS DEALS',
+    headline: 'Your Health First',
+    sub: 'Supplements, fitness & care',
+    cta: 'Shop Health',
+    ctaBg: 'bg-white',
+    ctaText: 'text-[#00416a]',
+    to: '/search?category=cat-health',
+  },
 ];
 
 const flashSaleProducts = products.filter(p => p.discountPct).slice(0, 6);
