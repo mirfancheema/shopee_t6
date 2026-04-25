@@ -27,7 +27,7 @@ export default function ShoppingCartScreen() {
     <>
       <TopAppBar variant="back" title="My Cart" />
 
-      <main className="pt-14 pb-36 min-h-screen bg-[#F5F5F5]">
+      <main className="pt-14 pb-48 min-h-screen bg-[#F5F5F5]">
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 gap-3">
             <span className="material-symbols-outlined text-[48px] text-on-surface-variant">shopping_cart</span>
@@ -199,8 +199,8 @@ export default function ShoppingCartScreen() {
         )}
       </main>
 
-      {/* Fixed Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-50 pb-safe">
+      {/* Fixed Bottom Bar — positioned above BottomNav (bottom-16 = 64px = h-16) */}
+      <div className="fixed bottom-16 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-40">
         <div className="flex items-center gap-3 px-3 py-3">
           <input
             type="checkbox"
