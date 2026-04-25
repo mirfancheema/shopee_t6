@@ -205,7 +205,7 @@ export default function ProductDetailsScreen() {
       </main>
 
       {/* Fixed Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-50 pb-safe">
+      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-bar z-50 pb-safe">
         <div className="flex items-center gap-2 px-3 py-3">
           <button className="flex flex-col items-center gap-0.5 w-14 active:opacity-70">
             <span className="material-symbols-outlined text-on-surface-variant text-[22px]">chat</span>

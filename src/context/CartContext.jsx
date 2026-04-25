@@ -1,26 +1,43 @@
-import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
 import { cartItems as initialItems } from '../data/mockData';
 
 export const DELIVERY_OPTIONS = [
-  { id: 'standard', label: 'Standard',     desc: '3–5 business days',      price: 3.99,  icon: 'local_shipping' },
-  { id: 'express',  label: 'Express',      desc: '1–2 business days',      price: 7.99,  icon: 'bolt' },
-  { id: 'sameday',  label: 'Same-Day',     desc: 'Delivered today by 10pm', price: 12.99, icon: 'directions_run' },
-  { id: 'free',     label: 'Free Shipping', desc: '5–7 business days',      price: 0,     icon: 'redeem' },
+  { id: 'standard', label: 'Standard',      desc: '3–5 business days',       price: 3.99,  icon: 'local_shipping' },
+  { id: 'express',  label: 'Express',       desc: '1–2 business days',       price: 7.99,  icon: 'bolt' },
+  { id: 'sameday',  label: 'Same-Day',      desc: 'Delivered today by 10pm', price: 12.99, icon: 'directions_run' },
+  { id: 'free',     label: 'Free Shipping', desc: '5–7 business days',       price: 0,     icon: 'redeem' },
 ];
 
 const shops = [...new Set(initialItems.map(i => i.shopName))];
+const defaultItems = initialItems.map(item => ({ ...item, selected: true }));
+const defaultDelivery = Object.fromEntries(shops.map(s => [s, 'standard']));
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(
-    initialItems.map(item => ({ ...item, selected: true }))
-  );
+  // Persist cart items across page refreshes
+  const [items, setItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('shopee-cart');
+      return saved ? JSON.parse(saved) : defaultItems;
+    } catch { return defaultItems; }
+  });
 
-  // One delivery method per shop, default to 'standard'
-  const [deliveryMethods, setDeliveryMethodsState] = useState(
-    Object.fromEntries(shops.map(s => [s, 'standard']))
-  );
+  // Persist delivery method selections
+  const [deliveryMethods, setDeliveryMethodsState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('shopee-delivery');
+      return saved ? JSON.parse(saved) : defaultDelivery;
+    } catch { return defaultDelivery; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('shopee-cart', JSON.stringify(items));
+  }, [items]);
+
+  useEffect(() => {
+    localStorage.setItem('shopee-delivery', JSON.stringify(deliveryMethods));
+  }, [deliveryMethods]);
 
   const updateQty = useCallback((id, delta) => {
     setItems(prev =>
@@ -28,6 +45,10 @@ export function CartProvider({ children }) {
         item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
       )
     );
+  }, []);
+
+  const removeItem = useCallback((id) => {
+    setItems(prev => prev.filter(item => item.id !== id));
   }, []);
 
   const toggleItem = useCallback((id) => {
@@ -64,7 +85,6 @@ export function CartProvider({ children }) {
   const selectedCount = selectedItems.length;
   const cartCount = items.reduce((sum, i) => sum + i.qty, 0);
 
-  // Sum shipping cost for shops that have at least one selected item
   const shippingTotal = useMemo(() => {
     const activeShops = [...new Set(selectedItems.map(i => i.shopName))];
     return activeShops.reduce((sum, shop) => {
@@ -77,7 +97,7 @@ export function CartProvider({ children }) {
     <CartContext.Provider value={{
       items, selectedItems, subtotal, shippingTotal, selectedCount, cartCount,
       deliveryMethods, setDeliveryMethod,
-      updateQty, toggleItem, toggleShop, toggleAll,
+      updateQty, removeItem, toggleItem, toggleShop, toggleAll,
     }}>
       {children}
     </CartContext.Provider>

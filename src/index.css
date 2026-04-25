@@ -18,6 +18,10 @@
 }
 
 @layer components {
+  /* Enlarges the tap area to 44px+ while keeping the visual checkbox small */
+  .checkbox-wrap {
+    @apply flex items-center justify-center p-3 -m-3 cursor-pointer;
+  }
   .custom-checkbox {
     @apply appearance-none w-[18px] h-[18px] border border-outline rounded-sm inline-flex items-center justify-center cursor-pointer relative flex-shrink-0;
   }

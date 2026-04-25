@@ -20,7 +20,7 @@ const banners = [
   },
   {
     id: 2,
-    gradient: 'from-secondary to-amber-500',
+    gradient: 'from-secondary to-secondary-container',
     icon: 'checkroom',
     eyebrow: 'NEW ARRIVALS',
     headline: 'Fresh Fashion Drops',
@@ -102,7 +102,7 @@ export default function HomeScreen() {
                 {/* Decorative icon */}
                 <div className="flex-shrink-0 w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
                   <span
-                    className="material-symbols-outlined text-white text-[36px]"
+                    className="material-symbols-outlined text-white text-[40px]"
                     style={{ fontVariationSettings: "'FILL' 1" }}
                   >
                     {banner.icon}
@@ -206,7 +206,7 @@ export default function HomeScreen() {
               { icon: 'local_shipping', label: 'Free Shipping' },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-on-tertiary text-[18px]">{item.icon}</span>
+                <span className="material-symbols-outlined text-on-tertiary text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>{item.icon}</span>
                 <span className="text-caption text-on-tertiary font-medium">{item.label}</span>
               </div>
             ))}

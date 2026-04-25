@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
 import { useCart, DELIVERY_OPTIONS } from '../context/CartContext';
+import { userProfile } from '../data/mockData';
 
 const paymentMethods = [
-  { id: 'shopeepay', label: 'ShopeePay',           icon: 'account_balance_wallet', desc: 'Balance: $150.00' },
-  { id: 'cod',       label: 'Cash on Delivery',     icon: 'payments',               desc: '' },
-  { id: 'card',      label: 'Credit / Debit Card',  icon: 'credit_card',            desc: 'Visa, Mastercard' },
+  { id: 'shopeepay', label: 'ShopeePay',          icon: 'account_balance_wallet', desc: `Balance: ${userProfile.shopeePay}` },
+  { id: 'cod',       label: 'Cash on Delivery',    icon: 'payments',               desc: '' },
+  { id: 'card',      label: 'Credit / Debit Card', icon: 'credit_card',            desc: 'Visa, Mastercard' },
 ];
 
 export default function CheckoutScreen() {
@@ -159,6 +160,8 @@ export default function CheckoutScreen() {
             {paymentMethods.map((pm) => (
               <button
                 key={pm.id}
+                role="radio"
+                aria-checked={payMethod === pm.id}
                 onClick={() => setPayMethod(pm.id)}
                 className={`flex items-center gap-3 p-3 rounded-xl border ${
                   payMethod === pm.id ? 'border-primary bg-primary-fixed' : 'border-surface-variant bg-surface-container-lowest'
@@ -204,7 +207,7 @@ export default function CheckoutScreen() {
       </main>
 
       {/* Fixed Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-50 pb-safe px-4 py-3">
+      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-bar z-50 pb-safe px-4 py-3">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-caption text-on-surface-variant">Total Payment</p>

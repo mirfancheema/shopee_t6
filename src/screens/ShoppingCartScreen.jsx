@@ -9,10 +9,9 @@ export default function ShoppingCartScreen() {
   const {
     items, selectedCount, subtotal, shippingTotal,
     deliveryMethods, setDeliveryMethod,
-    updateQty, toggleItem, toggleShop, toggleAll,
+    updateQty, removeItem, toggleItem, toggleShop, toggleAll,
   } = useCart();
 
-  // Track which shop's delivery panel is open
   const [openDeliveryShop, setOpenDeliveryShop] = useState(null);
 
   const allSelected = items.length > 0 && items.every(i => i.selected);
@@ -42,38 +41,40 @@ export default function ShoppingCartScreen() {
               const selectedMethodId = deliveryMethods[shopName] || 'standard';
               const selectedMethod = DELIVERY_OPTIONS.find(o => o.id === selectedMethodId);
               const isDeliveryOpen = openDeliveryShop === shopName;
-              const shopHasSelected = shopItems.some(i => i.selected);
 
               return (
                 <section key={shopName} className="bg-white mb-2">
                   {/* Shop Header */}
                   <div className="flex items-center gap-3 px-3 py-3 border-b border-surface-container">
-                    <input
-                      type="checkbox"
-                      className="custom-checkbox"
-                      checked={shopAllSelected}
-                      onChange={() => toggleShop(shopName)}
-                      aria-label={`Select all items from ${shopName}`}
-                    />
+                    <label className="checkbox-wrap">
+                      <input
+                        type="checkbox"
+                        className="custom-checkbox"
+                        checked={shopAllSelected}
+                        onChange={() => toggleShop(shopName)}
+                        aria-label={`Select all items from ${shopName}`}
+                      />
+                    </label>
                     <span className="material-symbols-outlined text-on-surface-variant text-[18px]">storefront</span>
                     <span className="text-body-md text-on-surface font-semibold flex-1">{shopName}</span>
                     <span className="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
                   </div>
 
-                  {/* Items */}
                   {shopItems.map((item) => (
                     <div key={item.id} className="flex gap-3 px-3 py-3 border-b border-surface-container last:border-b-0">
-                      <input
-                        type="checkbox"
-                        className="custom-checkbox mt-1"
-                        checked={item.selected}
-                        onChange={() => toggleItem(item.id)}
-                        aria-label={`Select ${item.title}`}
-                      />
+                      <label className="checkbox-wrap self-start mt-1">
+                        <input
+                          type="checkbox"
+                          className="custom-checkbox"
+                          checked={item.selected}
+                          onChange={() => toggleItem(item.id)}
+                          aria-label={`Select ${item.title}`}
+                        />
+                      </label>
                       <img
                         src={item.image}
                         alt={item.title}
-                        className="w-20 h-20 object-cover rounded border border-surface-container flex-shrink-0"
+                        className="w-20 h-20 object-cover rounded border border-surface-container flex-shrink-0 bg-surface-container-high"
                       />
                       <div className="flex flex-col flex-1 gap-1 min-w-0">
                         <h3 className="text-body-md text-on-surface line-clamp-2 leading-tight">{item.title}</h3>
@@ -81,7 +82,7 @@ export default function ShoppingCartScreen() {
                         {item.originalPrice && (
                           <p className="text-caption text-on-surface-variant line-through">${item.originalPrice.toFixed(2)}</p>
                         )}
-                        <div className="flex items-center justify-between mt-auto">
+                        <div className="flex items-center justify-between mt-1">
                           <span className="text-price-lg text-primary">${item.price.toFixed(2)}</span>
                           <div className="flex items-center border border-surface-variant rounded-full overflow-hidden">
                             <button
@@ -101,6 +102,15 @@ export default function ShoppingCartScreen() {
                             </button>
                           </div>
                         </div>
+                        {/* Remove button */}
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          className="mt-0.5 text-caption text-on-surface-variant active:text-error flex items-center gap-0.5 w-fit"
+                          aria-label={`Remove ${item.title}`}
+                        >
+                          <span className="material-symbols-outlined text-[14px]">delete_outline</span>
+                          Remove
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -125,7 +135,6 @@ export default function ShoppingCartScreen() {
                       </span>
                     </button>
 
-                    {/* Delivery Options Panel */}
                     {isDeliveryOpen && (
                       <div className="border-t border-surface-container bg-surface-container-low px-3 py-2 flex flex-col gap-1">
                         {DELIVERY_OPTIONS.map((opt) => {
@@ -133,23 +142,14 @@ export default function ShoppingCartScreen() {
                           return (
                             <button
                               key={opt.id}
-                              onClick={() => {
-                                setDeliveryMethod(shopName, opt.id);
-                                setOpenDeliveryShop(null);
-                              }}
+                              onClick={() => { setDeliveryMethod(shopName, opt.id); setOpenDeliveryShop(null); }}
                               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-colors ${
-                                isSelected
-                                  ? 'border-primary bg-primary-fixed'
-                                  : 'border-surface-variant bg-white'
+                                isSelected ? 'border-primary bg-primary-fixed' : 'border-surface-variant bg-white'
                               } active:opacity-80`}
                             >
-                              <span className={`material-symbols-outlined text-[20px] ${isSelected ? 'text-primary' : 'text-on-surface-variant'}`}>
-                                {opt.icon}
-                              </span>
+                              <span className={`material-symbols-outlined text-[20px] ${isSelected ? 'text-primary' : 'text-on-surface-variant'}`}>{opt.icon}</span>
                               <div className="flex-1 text-left">
-                                <p className={`text-body-md font-semibold ${isSelected ? 'text-primary' : 'text-on-surface'}`}>
-                                  {opt.label}
-                                </p>
+                                <p className={`text-body-md font-semibold ${isSelected ? 'text-primary' : 'text-on-surface'}`}>{opt.label}</p>
                                 <p className="text-caption text-on-surface-variant">{opt.desc}</p>
                               </div>
                               <span className={`text-label-sm font-bold ${opt.price === 0 ? 'text-tertiary' : isSelected ? 'text-primary' : 'text-on-surface'}`}>
@@ -168,7 +168,7 @@ export default function ShoppingCartScreen() {
               );
             })}
 
-            {/* Voucher Row */}
+            {/* Voucher */}
             <section className="bg-white mb-2 px-3 py-3 flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-[20px]">local_activity</span>
               <span className="text-body-md text-on-surface flex-1">Shopee Voucher</span>
@@ -179,9 +179,7 @@ export default function ShoppingCartScreen() {
             {/* Price Summary */}
             <section className="bg-white mb-2 px-4 py-3">
               <div className="flex justify-between py-1">
-                <span className="text-body-md text-on-surface-variant">
-                  Subtotal ({selectedCount} item{selectedCount !== 1 ? 's' : ''})
-                </span>
+                <span className="text-body-md text-on-surface-variant">Subtotal ({selectedCount} item{selectedCount !== 1 ? 's' : ''})</span>
                 <span className="text-body-md text-on-surface font-medium">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between py-1">
@@ -199,16 +197,18 @@ export default function ShoppingCartScreen() {
         )}
       </main>
 
-      {/* Fixed Bottom Bar — positioned above BottomNav (bottom-16 = 64px = h-16) */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-40">
+      {/* Fixed Bottom Bar — above BottomNav */}
+      <div className="fixed bottom-16 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-bar z-40">
         <div className="flex items-center gap-3 px-3 py-3">
-          <input
-            type="checkbox"
-            className="custom-checkbox"
-            checked={allSelected}
-            onChange={toggleAll}
-            aria-label="Select all items"
-          />
+          <label className="checkbox-wrap">
+            <input
+              type="checkbox"
+              className="custom-checkbox"
+              checked={allSelected}
+              onChange={toggleAll}
+              aria-label="Select all items"
+            />
+          </label>
           <span className="text-body-md text-on-surface font-medium">All</span>
           <div className="flex-1">
             <span className="text-caption text-on-surface-variant">

@@ -6,23 +6,25 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/product/${id}`}
-      className="bg-white rounded border border-[#E8E8E8] overflow-hidden flex flex-col relative block active:opacity-90"
+      className="bg-white rounded border border-surface-container overflow-hidden flex flex-col relative block active:opacity-90"
     >
-      <div className="aspect-square w-full bg-surface-container-low relative">
+      {/* Image with loading background (skeleton feel while LoremFlickr loads) */}
+      <div className="aspect-square w-full bg-surface-container-high relative">
         <img
           src={images[0]}
           alt={title}
           className="w-full h-full object-cover"
           loading="lazy"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
         {isMall && (
-          <div className="absolute top-0 left-0 bg-primary text-white text-[8px] font-bold px-1.5 py-0.5 rounded-br uppercase tracking-wider flex items-center gap-0.5">
-            <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+          <div className="absolute top-0 left-0 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-br uppercase tracking-wider flex items-center gap-0.5">
+            <span className="material-symbols-outlined text-[11px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
             Mall
           </div>
         )}
         {discountPct && (
-          <div className="absolute top-0 right-0 bg-secondary-container text-on-secondary-container text-[9px] px-1.5 py-0.5 rounded-bl font-bold">
+          <div className="absolute top-0 right-0 bg-secondary-container text-on-secondary-container text-[10px] px-1.5 py-0.5 rounded-bl font-bold">
             -{discountPct}%
           </div>
         )}
@@ -32,7 +34,7 @@ export default function ProductCard({ product }) {
         <h3 className="text-body-md line-clamp-2 text-on-surface flex-grow leading-tight">{title}</h3>
 
         {verified && (
-          <span className="px-1.5 py-[2px] bg-secondary-fixed text-on-secondary-fixed text-[8px] font-bold uppercase rounded-sm w-fit tracking-wide">
+          <span className="px-1.5 py-[2px] bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold uppercase rounded-sm w-fit tracking-wide">
             Authenticity Verified
           </span>
         )}

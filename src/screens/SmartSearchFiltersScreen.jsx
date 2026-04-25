@@ -90,7 +90,7 @@ export default function SmartSearchFiltersScreen() {
         <section className="bg-tertiary px-4 py-3 mb-2 flex items-center gap-2">
           <span className="material-symbols-outlined text-on-tertiary text-[20px]">auto_awesome</span>
           <p className="text-caption text-on-tertiary">
-            Smart defaults applied — accessories filtered out based on your search for <strong>home appliances</strong>
+            Smart defaults applied — accessories filtered out based on your search for <strong>{searchParams.get('q') || 'your search'}</strong>
           </p>
         </section>
 
@@ -215,7 +215,7 @@ export default function SmartSearchFiltersScreen() {
       </main>
 
       {/* Fixed Apply Bar */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-50 pb-safe px-4 py-3">
+      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white border-t border-surface-container shadow-bar z-50 pb-safe px-4 py-3">
         <button
           onClick={() => {
             // DEF-008: encode all filter state into URL params and navigate to search

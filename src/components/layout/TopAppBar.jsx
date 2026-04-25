@@ -7,7 +7,7 @@ export default function TopAppBar({ variant = 'home', title = '' }) {
 
   if (variant === 'back') {
     return (
-      <header className="flex items-center justify-between px-3 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-zinc-100 pt-safe">
+      <header className="flex items-center justify-between px-3 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-surface-container pt-safe">
         <button
           onClick={() => navigate(-1)}
           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-50 active:opacity-70"
@@ -31,7 +31,7 @@ export default function TopAppBar({ variant = 'home', title = '' }) {
   }
 
   return (
-    <header className="flex items-center gap-2 px-3 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-zinc-100 pt-safe">
+    <header className="flex items-center gap-2 px-3 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-surface-container pt-safe">
       <button className="p-2 text-zinc-500 rounded-full hover:bg-zinc-50 active:opacity-70 flex-shrink-0" aria-label="Scan QR">
         <span className="material-symbols-outlined text-[22px]">qr_code_scanner</span>
       </button>

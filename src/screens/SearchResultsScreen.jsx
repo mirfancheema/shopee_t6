@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
 import BottomNav from '../components/layout/BottomNav';
@@ -45,7 +44,7 @@ const priceRangeBounds = {
 };
 
 export default function SearchResultsScreen() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const q          = searchParams.get('q') || '';
   const categoryId = searchParams.get('category') || '';
 
@@ -56,7 +55,17 @@ export default function SearchResultsScreen() {
   const priceRangeParam = searchParams.get('priceRange') || 'any';
   const ratingParam    = searchParams.get('rating') ? Number(searchParams.get('rating')) : null;
 
-  const [activeChip, setActiveChip] = useState('all');
+  // Chip filter synced with URL params so SmartFilters and chips stay consistent
+  const activeChip = searchParams.get('chip') || 'all';
+  const setActiveChip = (chipId) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (chipId === 'all') next.delete('chip');
+      else next.set('chip', chipId);
+      return next;
+    }, { replace: true });
+  };
+
   const [activeSort, setActiveSort] = useState('Relevance');
 
   const categoryLabel = categoryLabelMap[categoryId] || '';

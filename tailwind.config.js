@@ -84,6 +84,10 @@ export default {
         "price-lg": ["20px", { lineHeight: "20px", letterSpacing: "-0.02em", fontWeight: "700" }],
         "caption":  ["10px", { lineHeight: "12px", fontWeight: "400" }],
       },
+      boxShadow: {
+        card: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        bar:  "0 -2px 10px rgba(0,0,0,0.06)",
+      },
     },
   },
   plugins: [],
