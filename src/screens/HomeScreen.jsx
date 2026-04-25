@@ -94,16 +94,30 @@ function useCountdown(targetHour) {
 }
 
 export default function HomeScreen() {
-  // DEF-012: track active carousel slide via scroll position
   const [activeSlide, setActiveSlide] = useState(0);
   const carouselRef = useRef(null);
-  const flashCountdown = useCountdown(23); // counts down to 11pm
+  const flashCountdown = useCountdown(23);
 
+  // Update active dot when user swipes manually
   const onCarouselScroll = () => {
     if (!carouselRef.current) return;
     const { scrollLeft, offsetWidth } = carouselRef.current;
     setActiveSlide(Math.round(scrollLeft / offsetWidth));
   };
+
+  // Auto-advance carousel every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!carouselRef.current) return;
+      const next = (activeSlide + 1) % banners.length;
+      carouselRef.current.scrollTo({
+        left: next * carouselRef.current.offsetWidth,
+        behavior: 'smooth',
+      });
+      setActiveSlide(next);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [activeSlide]);
 
   return (
     <>
