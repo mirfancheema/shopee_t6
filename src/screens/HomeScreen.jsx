@@ -3,12 +3,45 @@ import { Link } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
 import BottomNav from '../components/layout/BottomNav';
 import ProductCard from '../components/ui/ProductCard';
-import { products, categories, img } from '../data/mockData';
+import { products, categories } from '../data/mockData';
 
-const carouselSlides = [
-  { id: 1, src: img('banner-sale', 800, 340), alt: 'Flash Sale — Up to 90% off electronics' },
-  { id: 2, src: img('banner-fashion', 800, 340), alt: 'New arrivals in fashion' },
-  { id: 3, src: img('banner-beauty', 800, 340), alt: 'Beauty essentials deals' },
+const banners = [
+  {
+    id: 1,
+    gradient: 'from-primary to-primary-container',
+    icon: 'bolt',
+    eyebrow: 'FLASH SALE',
+    headline: 'Up to 90% Off',
+    sub: 'Electronics, Fashion & More',
+    cta: 'Shop Now',
+    ctaBg: 'bg-white',
+    ctaText: 'text-primary',
+    to: '/search?type=flash-sale',
+  },
+  {
+    id: 2,
+    gradient: 'from-secondary to-amber-500',
+    icon: 'checkroom',
+    eyebrow: 'NEW ARRIVALS',
+    headline: 'Fresh Fashion Drops',
+    sub: 'Latest styles from top brands',
+    cta: 'Explore',
+    ctaBg: 'bg-white',
+    ctaText: 'text-secondary',
+    to: '/search?category=cat-fashion',
+  },
+  {
+    id: 3,
+    gradient: 'from-tertiary to-tertiary-container',
+    icon: 'face',
+    eyebrow: 'BEAUTY WEEK',
+    headline: 'Glow Up Deals',
+    sub: 'Skincare & beauty from $9.90',
+    cta: 'Shop Beauty',
+    ctaBg: 'bg-white',
+    ctaText: 'text-tertiary',
+    to: '/search?category=cat-beauty',
+  },
 ];
 
 const flashSaleProducts = products.filter(p => p.discountPct).slice(0, 6);
@@ -60,15 +93,38 @@ export default function HomeScreen() {
             onScroll={onCarouselScroll}
             className="relative overflow-x-auto no-scrollbar flex snap-x snap-mandatory"
           >
-            {carouselSlides.map((slide) => (
-              <div key={slide.id} className="w-full flex-shrink-0 snap-start aspect-[21/9] relative">
-                <img src={slide.src} alt={slide.alt} className="w-full h-full object-cover" />
-              </div>
+            {banners.map((banner) => (
+              <Link
+                key={banner.id}
+                to={banner.to}
+                className={`w-full flex-shrink-0 snap-start aspect-[21/9] relative bg-gradient-to-r ${banner.gradient} flex items-center px-6 gap-4`}
+              >
+                {/* Decorative icon */}
+                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+                  <span
+                    className="material-symbols-outlined text-white text-[36px]"
+                    style={{ fontVariationSettings: "'FILL' 1" }}
+                  >
+                    {banner.icon}
+                  </span>
+                </div>
+                {/* Text */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-[9px] font-bold tracking-[0.15em] text-white/70 uppercase mb-0.5">
+                    {banner.eyebrow}
+                  </p>
+                  <h2 className="text-[22px] font-bold text-white leading-tight">{banner.headline}</h2>
+                  <p className="text-caption text-white/80 mt-0.5">{banner.sub}</p>
+                  <div className={`mt-2 inline-block px-4 py-1.5 rounded-full text-label-sm font-bold ${banner.ctaBg} ${banner.ctaText}`}>
+                    {banner.cta}
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
-          {/* DEF-012: active dot derived from activeSlide state */}
+          {/* Active dot tracks scroll position */}
           <div className="flex justify-center gap-1.5 py-2">
-            {carouselSlides.map((_, i) => (
+            {banners.map((_, i) => (
               <div
                 key={i}
                 className={`rounded-full transition-all ${

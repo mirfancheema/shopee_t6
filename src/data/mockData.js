@@ -1,13 +1,18 @@
 export const img = (seed, w = 400, h = 400) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
+// Category-appropriate product images via Unsplash Source.
+// The sig param makes the same keyword+sig always resolve to the same photo.
+export const productImg = (keyword, sig, w = 400, h = 400) =>
+  `https://source.unsplash.com/${w}x${h}/?${keyword}&sig=${sig}`;
+
 export const products = [
   {
     id: "p01",
     title: "Premium Active Noise Cancelling Wireless Headphones — 40hr Battery",
     price: 299.00, originalPrice: 399.00,
     rating: 4.9, sold: "2.5k",
-    images: [img("p01"), img("p01b")],
+    images: [productImg("headphones,audio", 1), productImg("headphones,music", 13)],
     category: "Electronics",
     verified: true, isMall: true, freeShipping: true,
     shopName: "TechNova Official Store",
@@ -19,7 +24,7 @@ export const products = [
     title: "Premium Athletic Running Shoes Lightweight Breathable Sport Sneakers",
     price: 45.00, originalPrice: null,
     rating: 4.7, sold: "1.2k",
-    images: [img("p02")],
+    images: [productImg("sneakers,running+shoes", 2)],
     category: "Fashion",
     verified: true, isMall: true, freeShipping: true,
     shopName: "SportStyle SG",
@@ -31,7 +36,7 @@ export const products = [
     title: "Smart Watch Series 7 Waterproof Fitness Tracker Heart Rate Monitor",
     price: 129.00, originalPrice: 189.00,
     rating: 4.8, sold: "3.4k",
-    images: [img("p03")],
+    images: [productImg("smartwatch,wearable", 3)],
     category: "Electronics",
     verified: true, isMall: false,
     shopName: "GadgetWorld",
@@ -43,7 +48,7 @@ export const products = [
     title: "Wireless Noise Cancelling Over-Ear Headphones Bluetooth 5.0",
     price: 89.50, originalPrice: 120.00,
     rating: 4.6, sold: "500",
-    images: [img("p04")],
+    images: [productImg("headphones,music", 4)],
     category: "Electronics",
     verified: false, isMall: true, freeShipping: true,
     shopName: "AudioPro",
@@ -55,7 +60,7 @@ export const products = [
     title: "Vitamin C Face Serum Anti-Aging Brightening Skincare 30ml",
     price: 24.90, originalPrice: null,
     rating: 4.9, sold: "8.9k",
-    images: [img("p05")],
+    images: [productImg("skincare,beauty,serum", 5)],
     category: "Beauty",
     verified: true, isMall: false, freeShipping: true,
     shopName: "SkinGlow Lab",
@@ -67,7 +72,7 @@ export const products = [
     title: "Aura Pro Noise Cancelling True Wireless Earbuds with MagSafe Charging",
     price: 189.00, originalPrice: 230.00,
     rating: 4.8, sold: "900",
-    images: [img("p06")],
+    images: [productImg("earbuds,wireless", 6)],
     category: "Electronics",
     verified: true, isMall: true, freeShipping: true,
     shopName: "Aura Electronics Official",
@@ -79,7 +84,7 @@ export const products = [
     title: "BassBoost True Wireless In-Ear Monitors",
     price: 89.50, originalPrice: 120.00,
     rating: 4.8, sold: "5.2k",
-    images: [img("p07")],
+    images: [productImg("earbuds,audio", 7)],
     category: "Electronics",
     verified: true, isMall: true, freeShipping: true,
     shopName: "BassBoost Official",
@@ -91,7 +96,7 @@ export const products = [
     title: "Generic Bluetooth 5.0 Wireless Earphones Budget Series",
     price: 15.99, originalPrice: null,
     rating: 4.5, sold: "25k+",
-    images: [img("p08")],
+    images: [productImg("earphones,budget", 8)],
     category: "Electronics",
     verified: false, isMall: false,
     shopName: "BudgetTech",
@@ -103,7 +108,7 @@ export const products = [
     title: "Waterproof Sport Earbuds IPX7 Running Swimming",
     price: 34.50, originalPrice: null,
     rating: 4.7, sold: "1.2k",
-    images: [img("p09")],
+    images: [productImg("sport+earbuds,fitness", 9)],
     category: "Electronics",
     verified: false, isMall: false,
     shopName: "SportGear",
@@ -115,7 +120,7 @@ export const products = [
     title: "Sony Alpha a7 IV Full-Frame Mirrorless Camera Body",
     price: 2498.00, originalPrice: null,
     rating: 4.9, sold: "1.2k",
-    images: [img("p10", 600, 600)],
+    images: [productImg("camera,mirrorless,sony", 10, 600, 600)],
     category: "Electronics",
     verified: true, isMall: true,
     shopName: "Sony Official Store",
@@ -127,7 +132,7 @@ export const products = [
     title: "Canon EOS R6 Mark II Mirrorless Camera Body",
     price: 2499.00, originalPrice: null,
     rating: 4.8, sold: "850",
-    images: [img("p11", 600, 600)],
+    images: [productImg("camera,canon,photography", 11, 600, 600)],
     category: "Electronics",
     verified: true, isMall: true,
     shopName: "Canon Official Store",
@@ -139,7 +144,7 @@ export const products = [
     title: "Noise-Cancelling Headphones Pro Over-Ear 40hr Playtime",
     price: 59.90, originalPrice: 99.00,
     rating: 4.7, sold: "2k",
-    images: [img("p12")],
+    images: [productImg("headphones,noisecancelling", 12)],
     category: "Electronics",
     verified: true, isMall: false,
     shopName: "AudioDeals",
@@ -155,7 +160,7 @@ export const cartItems = [
     variant: "Color: Matte Black",
     price: 129.50, originalPrice: 199.00, qty: 1,
     shopName: "TechStore Official",
-    image: img("p01"),
+    image: productImg("headphones,audio", 1),
   },
   {
     id: "c02", productId: "p05",
@@ -163,7 +168,7 @@ export const cartItems = [
     variant: "Size: L, Color: White",
     price: 24.00, originalPrice: null, qty: 2,
     shopName: "LifeStyle Basics",
-    image: img("p05"),
+    image: productImg("tshirt,cotton,clothing", 14),
   },
   {
     id: "c03", productId: "p06",
@@ -171,7 +176,7 @@ export const cartItems = [
     variant: "Variant: Midnight Black",
     price: 189.00, originalPrice: 230.00, qty: 1,
     shopName: "Aura Electronics Official",
-    image: img("p06"),
+    image: productImg("earbuds,wireless", 6),
   },
 ];
 
@@ -193,24 +198,24 @@ export const userProfile = {
 };
 
 export const categories = [
-  { id: "cat-electronics", label: "Electronics",    icon: "smartphone",      bg: "bg-primary-container",       text: "text-on-primary-container" },
-  { id: "cat-fashion",     label: "Fashion",        icon: "checkroom",       bg: "bg-secondary-container",     text: "text-on-secondary-container" },
-  { id: "cat-home",        label: "Home & Living",  icon: "chair",           bg: "bg-tertiary-container",      text: "text-on-tertiary-container" },
-  { id: "cat-health",      label: "Health",         icon: "health_and_safety", bg: "bg-error-container",       text: "text-on-error-container" },
-  { id: "cat-gaming",      label: "Gaming",         icon: "sports_esports",  bg: "bg-surface-container-high",  text: "text-on-surface" },
-  { id: "cat-beauty",      label: "Beauty",         icon: "face",            bg: "bg-surface-container-high",  text: "text-on-surface" },
-  { id: "cat-pets",        label: "Pets",           icon: "pets",            bg: "bg-surface-container-high",  text: "text-on-surface" },
-  { id: "cat-more",        label: "More",           icon: "grid_view",       bg: "bg-surface-container-high",  text: "text-on-surface" },
+  { id: "cat-electronics", label: "Electronics",    icon: "smartphone",        bg: "bg-primary-container",      text: "text-on-primary-container" },
+  { id: "cat-fashion",     label: "Fashion",        icon: "checkroom",         bg: "bg-secondary-container",    text: "text-on-secondary-container" },
+  { id: "cat-home",        label: "Home & Living",  icon: "chair",             bg: "bg-tertiary-container",     text: "text-on-tertiary-container" },
+  { id: "cat-health",      label: "Health",         icon: "health_and_safety", bg: "bg-error-container",        text: "text-on-error-container" },
+  { id: "cat-gaming",      label: "Gaming",         icon: "sports_esports",    bg: "bg-surface-container-high", text: "text-on-surface" },
+  { id: "cat-beauty",      label: "Beauty",         icon: "face",              bg: "bg-surface-container-high", text: "text-on-surface" },
+  { id: "cat-pets",        label: "Pets",           icon: "pets",              bg: "bg-surface-container-high", text: "text-on-surface" },
+  { id: "cat-more",        label: "More",           icon: "grid_view",         bg: "bg-surface-container-high", text: "text-on-surface" },
 ];
 
 export const deals = [
-  { id: "d01", productId: "p12", title: "Noise-Cancelling Headphones Pro", price: 59.90, discountLabel: "-40%", image: img("p12") },
-  { id: "d02", productId: "p03", title: "Smart Watch Series 7",             price: 129.00, discountLabel: "-32%", image: img("p03") },
-  { id: "d03", productId: "p05", title: "Vitamin C Face Serum 30ml",        price: 24.90, discountLabel: "BOGO", image: img("p05") },
+  { id: "d01", productId: "p12", title: "Noise-Cancelling Headphones Pro", price: 59.90, discountLabel: "-40%", image: productImg("headphones,noisecancelling", 12) },
+  { id: "d02", productId: "p03", title: "Smart Watch Series 7",             price: 129.00, discountLabel: "-32%", image: productImg("smartwatch,wearable", 3) },
+  { id: "d03", productId: "p05", title: "Vitamin C Face Serum 30ml",        price: 24.90, discountLabel: "BOGO", image: productImg("skincare,beauty,serum", 5) },
 ];
 
 export const recentOrders = [
-  { id: "r01", title: "Mixed Nuts 500g",    image: img("snacks-rp", 96, 96) },
-  { id: "r02", title: "Energy Drink Case",  image: img("energy-rp", 96, 96) },
-  { id: "r03", title: "Ruled Notebooks x3", image: img("notebooks-rp", 96, 96) },
+  { id: "r01", title: "Mixed Nuts 500g",    image: productImg("food,snacks,nuts", 20, 96, 96) },
+  { id: "r02", title: "Energy Drink Case",  image: productImg("energy+drink,beverage", 21, 96, 96) },
+  { id: "r03", title: "Ruled Notebooks x3", image: productImg("notebook,stationery", 22, 96, 96) },
 ];
