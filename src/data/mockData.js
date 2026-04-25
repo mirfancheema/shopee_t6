@@ -1,10 +1,10 @@
 export const img = (seed, w = 400, h = 400) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
-// Category-appropriate product images via Unsplash Source.
-// The sig param makes the same keyword+sig always resolve to the same photo.
+// Category-appropriate product images via LoremFlickr.
+// The lock param makes the same keyword+lock always resolve to the same photo.
 export const productImg = (keyword, sig, w = 400, h = 400) =>
-  `https://source.unsplash.com/${w}x${h}/?${keyword}&sig=${sig}`;
+  `https://loremflickr.com/${w}/${h}/${keyword}?lock=${sig}`;
 
 export const products = [
   {
