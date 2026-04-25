@@ -1,30 +1,8 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
 import BottomNav from '../components/layout/BottomNav';
-import { deals, recentOrders, products, img } from '../data/mockData';
-
-// DEF-018: live countdown hook
-function useCountdown(targetHour) {
-  const [display, setDisplay] = useState('--:--:--');
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      const end = new Date();
-      end.setHours(targetHour, 0, 0, 0);
-      if (end <= now) end.setDate(end.getDate() + 1);
-      const diff = end - now;
-      const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-      setDisplay(`${h}:${m}:${s}`);
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [targetHour]);
-  return display;
-}
+import { deals, recentOrders, products } from '../data/mockData';
+import useCountdown from '../hooks/useCountdown';
 
 const loyaltyTier = { name: 'Silver', coins: 2500, nextTier: 'Gold', progress: 62 };
 const vouchers = [

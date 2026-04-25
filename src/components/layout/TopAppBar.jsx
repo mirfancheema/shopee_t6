@@ -19,7 +19,17 @@ export default function TopAppBar({ variant = 'home', title = '' }) {
           <h1 className="text-primary font-bold text-lg font-sans flex-1 text-center">{title}</h1>
         )}
         <div className="flex items-center gap-1">
-          <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-50" aria-label="Share">
+          <button
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-50"
+            aria-label="Share"
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({ title: document.title, url: window.location.href });
+              } else {
+                navigator.clipboard?.writeText(window.location.href);
+              }
+            }}
+          >
             <span className="material-symbols-outlined text-zinc-600">share</span>
           </button>
           <Link to="/cart" className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-zinc-50" aria-label="Cart">

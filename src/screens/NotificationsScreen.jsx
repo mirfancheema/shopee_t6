@@ -109,7 +109,7 @@ export default function NotificationsScreen() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-4 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-zinc-100 pt-safe">
+      <header className="flex items-center justify-between px-4 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-surface-container pt-safe">
         <h1 className="text-h2 text-on-surface font-bold">Notifications</h1>
         {unreadCount > 0 && (
           <button

@@ -51,6 +51,29 @@ export function CartProvider({ children }) {
     setItems(prev => prev.filter(item => item.id !== id));
   }, []);
 
+  const addItem = useCallback((product, qty = 1) => {
+    setItems(prev => {
+      const exists = prev.find(i => i.productId === product.id);
+      if (exists) {
+        return prev.map(i =>
+          i.productId === product.id ? { ...i, qty: i.qty + qty, selected: true } : i
+        );
+      }
+      return [...prev, {
+        id: `c-${product.id}-${Date.now()}`,
+        productId: product.id,
+        title: product.title,
+        variant: 'Default',
+        price: product.price,
+        originalPrice: product.originalPrice,
+        qty,
+        shopName: product.shopName,
+        image: product.images[0],
+        selected: true,
+      }];
+    });
+  }, []);
+
   const toggleItem = useCallback((id) => {
     setItems(prev =>
       prev.map(item =>
@@ -80,6 +103,13 @@ export function CartProvider({ children }) {
     setDeliveryMethodsState(prev => ({ ...prev, [shopName]: methodId }));
   }, []);
 
+  const clearCart = useCallback(() => {
+    setItems([]);
+    setDeliveryMethodsState(defaultDelivery);
+    localStorage.removeItem('shopee-cart');
+    localStorage.removeItem('shopee-delivery');
+  }, []);
+
   const selectedItems = items.filter(i => i.selected);
   const subtotal = selectedItems.reduce((sum, i) => sum + i.price * i.qty, 0);
   const selectedCount = selectedItems.length;
@@ -97,7 +127,7 @@ export function CartProvider({ children }) {
     <CartContext.Provider value={{
       items, selectedItems, subtotal, shippingTotal, selectedCount, cartCount,
       deliveryMethods, setDeliveryMethod,
-      updateQty, removeItem, toggleItem, toggleShop, toggleAll,
+      updateQty, removeItem, addItem, clearCart, toggleItem, toggleShop, toggleAll,
     }}>
       {children}
     </CartContext.Provider>

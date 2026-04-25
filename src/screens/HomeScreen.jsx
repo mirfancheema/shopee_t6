@@ -4,6 +4,7 @@ import TopAppBar from '../components/layout/TopAppBar';
 import BottomNav from '../components/layout/BottomNav';
 import ProductCard from '../components/ui/ProductCard';
 import { products, categories } from '../data/mockData';
+import useCountdown from '../hooks/useCountdown';
 
 const banners = [
   {
@@ -71,32 +72,15 @@ const banners = [
 const flashSaleProducts = products.filter(p => p.discountPct).slice(0, 6);
 const forYouProducts = products.slice(0, 8);
 
-// DEF-017: live countdown to next sale end hour
-function useCountdown(targetHour) {
-  const [display, setDisplay] = useState('--:--:--');
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      const end = new Date();
-      end.setHours(targetHour, 0, 0, 0);
-      if (end <= now) end.setDate(end.getDate() + 1);
-      const diff = end - now;
-      const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-      setDisplay(`${h}:${m}:${s}`);
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [targetHour]);
-  return display;
-}
 
 export default function HomeScreen() {
   const [activeSlide, setActiveSlide] = useState(0);
   const carouselRef = useRef(null);
+  const activeSlideRef = useRef(0); // ref avoids stale closure in interval
   const flashCountdown = useCountdown(23);
+
+  // Keep ref in sync with state
+  activeSlideRef.current = activeSlide;
 
   // Update active dot when user swipes manually
   const onCarouselScroll = () => {
@@ -105,11 +89,11 @@ export default function HomeScreen() {
     setActiveSlide(Math.round(scrollLeft / offsetWidth));
   };
 
-  // Auto-advance carousel every 3 seconds
+  // Auto-advance carousel every 3 seconds — runs once on mount, no stale closure
   useEffect(() => {
     const interval = setInterval(() => {
       if (!carouselRef.current) return;
-      const next = (activeSlide + 1) % banners.length;
+      const next = (activeSlideRef.current + 1) % banners.length;
       carouselRef.current.scrollTo({
         left: next * carouselRef.current.offsetWidth,
         behavior: 'smooth',
@@ -117,7 +101,7 @@ export default function HomeScreen() {
       setActiveSlide(next);
     }, 3000);
     return () => clearInterval(interval);
-  }, [activeSlide]);
+  }, []); // empty dep — interval never resets on manual swipe
 
   return (
     <>

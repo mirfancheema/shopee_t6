@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
 import BottomNav from '../components/layout/BottomNav';
@@ -114,7 +115,7 @@ export default function SearchResultsScreen() {
 
   return (
     <>
-      <header className="flex items-center gap-2 px-3 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-zinc-100 pt-safe">
+      <header className="flex items-center gap-2 px-3 h-14 w-full max-w-[430px] fixed top-0 z-50 bg-white shadow-sm border-b border-surface-container pt-safe">
         <Link to="/" aria-label="Go back">
           <span className="material-symbols-outlined text-primary text-[22px] p-1">arrow_back</span>
         </Link>

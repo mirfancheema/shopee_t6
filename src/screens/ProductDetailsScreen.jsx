@@ -1,15 +1,19 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import TopAppBar from '../components/layout/TopAppBar';
-import { products, img } from '../data/mockData';
+import { products } from '../data/mockData';
+import { useCart } from '../context/CartContext';
 
 export default function ProductDetailsScreen() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { addItem } = useCart();
   const product = products.find(p => p.id === id);
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [liked, setLiked] = useState(false);
-  const [following, setFollowing] = useState(false); // DEF-015
+  const [following, setFollowing] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   if (!product) {
     return (
@@ -211,22 +215,34 @@ export default function ProductDetailsScreen() {
             <span className="material-symbols-outlined text-on-surface-variant text-[22px]">chat</span>
             <span className="text-[9px] text-on-surface-variant">Chat</span>
           </button>
-          <button className="flex flex-col items-center gap-0.5 w-14 active:opacity-70">
+          <button
+            onClick={() => navigate('/cart')}
+            className="flex flex-col items-center gap-0.5 w-14 active:opacity-70"
+            aria-label="Go to cart"
+          >
             <span className="material-symbols-outlined text-on-surface-variant text-[22px]">shopping_cart</span>
             <span className="text-[9px] text-on-surface-variant">Cart</span>
           </button>
-          <Link
-            to="/cart"
-            className="flex-1 bg-primary-fixed text-on-primary-fixed-variant text-label-sm font-bold py-3 rounded-full text-center active:opacity-80"
+          <button
+            onClick={() => {
+              addItem(product, qty);
+              setAddedToCart(true);
+              setTimeout(() => setAddedToCart(false), 1500);
+            }}
+            className={`flex-1 text-label-sm font-bold py-3 rounded-full text-center active:opacity-80 transition-colors ${
+              addedToCart
+                ? 'bg-tertiary text-on-tertiary'
+                : 'bg-primary-fixed text-on-primary-fixed-variant'
+            }`}
           >
-            Add to Cart
-          </Link>
-          <Link
-            to="/checkout"
+            {addedToCart ? '✓ Added!' : 'Add to Cart'}
+          </button>
+          <button
+            onClick={() => { addItem(product, qty); navigate('/checkout'); }}
             className="flex-1 bg-primary text-on-primary text-label-sm font-bold py-3 rounded-full text-center active:opacity-80"
           >
             Buy Now
-          </Link>
+          </button>
         </div>
       </div>
     </>

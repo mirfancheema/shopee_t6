@@ -59,7 +59,7 @@ export default function SmartSearchFiltersScreen() {
   return (
     <>
       {/* Header */}
-      <header className="flex items-center justify-between px-4 h-14 max-w-[430px] fixed top-0 z-50 w-full bg-white shadow-sm border-b border-zinc-100 pt-safe">
+      <header className="flex items-center justify-between px-4 h-14 max-w-[430px] fixed top-0 z-50 w-full bg-white shadow-sm border-b border-surface-container pt-safe">
         <button onClick={() => navigate(-1)} className="p-1" aria-label="Close filters">
           <span className="material-symbols-outlined text-primary text-[22px]">arrow_back</span>
         </button>

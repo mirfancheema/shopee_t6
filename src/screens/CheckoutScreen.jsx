@@ -12,8 +12,7 @@ const paymentMethods = [
 
 export default function CheckoutScreen() {
   const navigate = useNavigate();
-  const { selectedItems, subtotal, shippingTotal, deliveryMethods, setDeliveryMethod } = useCart();
-  const { items: allItems } = useCart();
+  const { selectedItems, subtotal, shippingTotal, deliveryMethods, setDeliveryMethod, items: allItems, clearCart } = useCart();
 
   const [payMethod, setPayMethod] = useState('shopeepay');
   const [changeDeliveryShop, setChangeDeliveryShop] = useState(null); // shop name with open panel
@@ -214,7 +213,7 @@ export default function CheckoutScreen() {
             <p className="text-price-lg text-primary font-bold">${total.toFixed(2)}</p>
           </div>
           <button
-            onClick={() => navigate('/order-confirmed')}
+            onClick={() => { clearCart(); navigate('/order-confirmed'); }}
             className="bg-primary text-on-primary px-8 py-3 rounded-full text-label-sm font-bold active:opacity-80"
           >
             Place Order
